@@ -22,31 +22,29 @@ public class Cliente  {
             //canal por donde el cliente recibe y envia informacion
             Socket client = new Socket(ip, port);
 
-            //guarda la inforacion recibida por el cliente en la variable entrada
-            //buffered reader indica que variable puede contener string e int y entrada es la informacion que se va a recibir del servidor
-            DataInputStream entrada = new DataInputStream(client.getInputStream());
+
 
             //crea el output por donde se envia la informacion del cliente hacia el servidor
             // la salida es la informacion que se envia al servidor y en este caso se indicia que es un objeto
             DataOutputStream salida = new DataOutputStream(client.getOutputStream());
 
-            //ciclo que funciona mientras el juego esta activo
+            //crea el input por donde se recibe la informacion del servidor
+            InputStream input = client.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
+            if(turno) {
 
-
-                //esto se cumple cuando sea el turno del jugador y cuando el cliente tenga una lista(palabra) asociada
-                if(turno) {
-
+                    //Envia informacion al server
                     PrintWriter pw=new PrintWriter(salida);
                     pw.flush();
                     pw.write("Bye25\0");
-                    pw.close();
-                    client.close();
+                    pw.flush();
 
 
-
-                    client.setSoLinger (true, 10);
-
+                    //Lee la informacion enviada por el servidor
+                    String msg = reader.readLine();
+                    //imprime la informacion enviada por el servidor
+                    System.out.println(msg);
 
 
 
@@ -61,8 +59,6 @@ public class Cliente  {
             //cierra el socket del cliente
             client.close();
 
-            //cierra la entrada de informacion
-            entrada.close();
 
             //cierra la salida de informacion
             salida.close();
